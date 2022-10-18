@@ -21,6 +21,20 @@ def index():
       <input type=submit value=Upload>
     </form>
     '''
+
+    try:
+        os.mkdir("files")
+    except:
+        pass
+    try:
+        os.mkdir("process")
+    except:
+        pass
+    try:
+        os.mkdir("downloaded_files")
+    except:
+        pass
+    
     if request.method == 'POST':
         for i in os.listdir("./process"):
             os.remove("./process/"+i)

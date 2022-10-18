@@ -217,6 +217,10 @@ def download_file(hash):
     hash_list = contract.functions.read(hash).call()
     print(filename, hash_list)
     data_all = b""
+    try:
+        os.mkdir("downloaded_files") 
+    except:
+        pass
     for hash in hash_list:
         print(hash.hex())
         data = bytes.fromhex(w3.eth.getTransaction(hash.hex())['input'][2:])
