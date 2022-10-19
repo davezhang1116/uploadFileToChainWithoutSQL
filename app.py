@@ -15,13 +15,49 @@ def index():
     base_html = '''
     <!doctype html>
     <title>Upload new files that is less than 10MB </title>
-    <h1>Upload a file</h1>
+    <h1>Upload a file <10MB </h1>
     <form method=post enctype=multipart/form-data>
-      <input type=file name=file>
-      <input type=submit value=Upload>
+      <input type=file name=file id="actual-btn" hidden/>
+      <label for="actual-btn">Choose File</label>
+      <span id="file-chosen">No file chosen</span>
+       &nbsp; &nbsp; &nbsp; &nbsp;
+      <input type=submit value=Upload id="actual-btn">
+      
     </form>
-    '''
+    <script>
+    const actualBtn = document.getElementById('actual-btn');
 
+    const fileChosen = document.getElementById('file-chosen');
+
+    actualBtn.addEventListener('change', function(){
+    fileChosen.textContent = this.files[0].name
+    })
+    </script>
+    <style>
+    label {
+    background-color: indigo;
+    color: white;
+    padding: 0.5rem;
+    font-family: sans-serif;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    margin-top: 1rem;
+    }
+    #file-chosen{
+    margin-left: 0.3rem;
+    font-family: sans-serif;
+    }
+    input[type=submit]{
+    background-color: blue;
+    border: none;
+    color: white;
+    padding: 10px 16px;
+    text-decoration: none;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    }
+    </style>
+    '''
     try:
         os.mkdir("files")
     except:
@@ -62,15 +98,10 @@ def index():
     return base_html
 @app.route('/download/<hash>')
 def download(hash):
-
-    filename = download_file(hash)
-
-    file_path = "./downloaded_files/"+ filename
+    data, filename = download_file(hash)
     return_data = io.BytesIO()
-    with open(file_path, 'rb') as fo:
-        return_data.write(fo.read())
+    return_data.write(data)
     return_data.seek(0)
-    os.remove(file_path)
     return send_file(return_data, attachment_filename=filename, as_attachment=True)
 
 if __name__ == "__main__":

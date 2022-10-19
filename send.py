@@ -226,12 +226,7 @@ def download_file(hash):
         data = bytes.fromhex(w3.eth.getTransaction(hash.hex())['input'][2:])
         data_all = data_all+data
     try:
-        f = open("./downloaded_files/"+filename, "wb")
-        f.write(gzip.decompress(data_all))
-        f.close()
-        print(True)
+        data = gzip.decompress(data_all)
     except:
-        f = open("./downloaded_files/"+filename, "wb")
-        f.write(data_all)
-        f.close()
-    return filename
+        data = data_all
+    return data, filename
